@@ -24,7 +24,6 @@ func main() {
 
 	// get prices
 	prices := make(chan map[string]float64, symbolsNumber)
-
 	for _, symbol := range symbols {
 		go func(symbol string, prices chan map[string]float64) {
 			price, err := GetSymbolPrice(symbol)
@@ -39,6 +38,7 @@ func main() {
 		}(symbol, prices)
 	}
 
+	// print prices
 	for z := 0; z < symbolsNumber; z++ {
 		price := <- prices
 
