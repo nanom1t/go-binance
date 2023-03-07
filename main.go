@@ -84,6 +84,9 @@ func GetSymbolPrice(symbol string) (float64, error) {
 	var price float64
 	if len(response) > 0 {
 		price, err = strconv.ParseFloat(response[0].Price, 64)
+		if err != nil {
+			return 0, err
+		}
 	}
 
 	return price, nil
