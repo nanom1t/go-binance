@@ -1,13 +1,13 @@
 # go-test-task
 Test task
 
-##Installation
+## Installation
 ```
 go mod download
 go mod vendor
 ```
 
-##Run
+## Run
 ```
 go run main.go
 ```
