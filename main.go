@@ -22,17 +22,30 @@ func main() {
 		return
 	}
 
-	// get price
-	for _, symbol := range symbols {
-		price, err := GetSymbolPrice(symbol)
-		if err != nil {
-			log.Println(err)
-		}
+	// get prices
+	prices := make(chan map[string]float64, symbolsNumber)
 
-		fmt.Println(symbol, price)
+	for _, symbol := range symbols {
+		go func(symbol string, prices chan map[string]float64) {
+			price, err := GetSymbolPrice(symbol)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			prices <- map[string]float64{
+				symbol: price,
+			}
+		}(symbol, prices)
 	}
 
-	fmt.Println("done")
+	for z := 0; z < symbolsNumber; z++ {
+		price := <- prices
+
+		for symbol, value := range price {
+			fmt.Println(symbol, value)
+		}
+	}
 }
 
 // Get exchange symbols
