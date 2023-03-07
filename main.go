@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"context"
 	"log"
+	"strconv"
 )
 
 const (
@@ -21,7 +22,17 @@ func main() {
 		return
 	}
 
-	fmt.Println(symbols)
+	// get price
+	for _, symbol := range symbols {
+		price, err := GetSymbolPrice(symbol)
+		if err != nil {
+			log.Println(err)
+		}
+
+		fmt.Println(symbol, price)
+	}
+
+	fmt.Println("done")
 }
 
 // Get exchange symbols
@@ -45,4 +56,22 @@ func GetExchangeSymbols(count int) ([]string, error) {
 	}
 
 	return symbols, nil
+}
+
+// Get symbol price
+func GetSymbolPrice(symbol string) (float64, error) {
+	client := binance.NewClient(apiKey, secretKey)
+	ctx := context.Background()
+
+	response, err := client.NewListPricesService().Symbol(symbol).Do(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	var price float64
+	if len(response) > 0 {
+		price, err = strconv.ParseFloat(response[0].Price, 64)
+	}
+
+	return price, nil
 }
