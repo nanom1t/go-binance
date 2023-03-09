@@ -1,4 +1,4 @@
-# go-test-task
+# go-binance
 Test task
 
 ## Installation
